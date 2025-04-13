@@ -9,7 +9,7 @@ This project implements a sentiment analysis system that can be adapted to low-r
 - Tools for language preservation and documentation
 
 ## Demo
-Visit the [live demo](https://yourusername.github.io/uttarakhand-nlp-project/) to try the sentiment analysis system.
+Visit the [live demo](https://specbeck.github.io/nlp-sentiment/) to try the sentiment analysis system.
 
 ## Technical Details
 - Python-based implementation using PyTorch and HuggingFace Transformers
