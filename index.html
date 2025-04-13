@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .container {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+        .positive {
+            background-color: #dff0d8;
+            border: 1px solid #d6e9c6;
+        }
+        .negative {
+            background-color: #f2dede;
+            border: 1px solid #ebccd1;
+        }
+        .languages {
+            margin-top: 20px;
+        }
+        select {
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .meter {
+            height: 20px;
+            position: relative;
+            background: #f3f3f3;
+            border-radius: 25px;
+            padding: 5px;
+            box-shadow: inset 0 -1px 1px rgba(255,255,255,0.3);
+            margin-top: 10px;
+        }
+        .meter > span {
+            display: block;
+            height: 100%;
+            border-radius: 10px;
+            background-color: rgb(43,194,83);
+            box-shadow: inset 0 2px 9px rgba(255,255,255,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cross-Lingual Sentiment Analysis</h1>
+    
+    <div class="container">
+        <p>Enter text to analyze its sentiment:</p>
+        
+        <div class="languages">
+            <label for="language">Select Language:</label>
+            <select id="language">
+                <option value="english">English</option>
+                <option value="hindi">Hindi</option>
+                <option value="kumaoni">Kumaoni</option>
+                <option value="garhwali">Garhwali</option>
+            </select>
+        </div>
+        
+        <textarea id="text-input" placeholder="Type or paste text here..."></textarea>
+        <button onclick="analyzeSentiment()">Analyze Sentiment</button>
+        
+        <div id="result">
+            <h3>Analysis Result:</h3>
+            <p id="sentiment"></p>
+            <p>Confidence:</p>
+            <div class="meter">
+                <span id="confidence-meter" style="width: 0%"></span>
+            </div>
+            <p id="confidence-value"></p>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h2>About this Project</h2>
+        <p>This project demonstrates cross-lingual sentiment analysis using transfer learning. The model was initially trained on English data and adapted to work with low-resource languages from Uttarakhand, India.</p>
+        <p>Languages supported:</p>
+        <ul>
+            <li><strong>English:</strong> Base language with full support</li>
+            <li><strong>Hindi:</strong> Adapted using transfer learning</li>
+            <li><strong>Kumaoni:</strong> Experimental support for this indigenous language of Uttarakhand</li>
+            <li><strong>Garhwali:</strong> Experimental support for this indigenous language of Uttarakhand</li>
+        </ul>
+    </div>
+
+    <script>
+        async function analyzeSentiment() {
+            const textInput = document.getElementById('text-input').value;
+            const language = document.getElementById('language').value;
+            
+            if (!textInput.trim()) {
+                alert('Please enter some text to analyze');
+                return;
+            }
+            
+            // In a real implementation, this would call your API endpoint
+            // For demo purposes, we'll simulate a response
+            try {
+                // Simulate API call
+                const response = await mockApiCall(textInput, language);
+                
+                // Display results
+                const resultDiv = document.getElementById('result');
+                const sentimentText = document.getElementById('sentiment');
+                const confidenceMeter = document.getElementById('confidence-meter');
+                const confidenceValue = document.getElementById('confidence-value');
+                
+                // Update result styling based on sentiment
+                resultDiv.className = response.sentiment.toLowerCase();
+                
+                // Show result
+                resultDiv.style.display = 'block';
+                
+                // Update text and confidence meter
+                sentimentText.textContent = `Sentiment: ${response.sentiment}`;
+                confidenceMeter.style.width = `${response.confidence * 100}%`;
+                confidenceValue.textContent = `${(response.confidence * 100).toFixed(1)}%`;
+                
+                // Add appropriate color to meter
+                if (response.sentiment === "Positive") {
+                    confidenceMeter.style.backgroundColor = "rgb(43, 194, 83)";
+                } else {
+                    confidenceMeter.style.backgroundColor = "rgb(194, 43, 43)";
+                }
+                
+            } catch (error) {
+                alert('Error analyzing sentiment: ' + error.message);
+            }
+        }
+        
+        // Mock API call for demo purposes
+        async function mockApiCall(text, language) {
+            // Simulate network delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Simple simulation of sentiment analysis
+            // In a real app, this would call your backend API
+            const sentimentScore = Math.random(); // Random score between 0 and 1
+            const sentiment = sentimentScore > 0.5 ? "Positive" : "Negative";
+            const confidence = 0.5 + Math.random() * 0.5; // Random confidence between 0.5 and 1
+            
+            return {
+                text: text,
+                language: language,
+                sentiment: sentiment,
+                confidence: confidence,
+                raw_scores: [1 - confidence, confidence]
+            };
+        }
+    </script>
+</body>
+</html>
